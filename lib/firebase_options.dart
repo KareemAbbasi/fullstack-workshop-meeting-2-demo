@@ -60,4 +60,5 @@ class DefaultFirebaseOptions {
     authDomain: 'fsprjct-46b24.firebaseapp.com',
     storageBucket: 'fsprjct-46b24.appspot.com',
   );
+
 }
