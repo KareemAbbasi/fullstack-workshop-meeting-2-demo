@@ -91,8 +91,16 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               ElevatedButton(
                 onPressed: createUser,
-                child: Text("Submit"),
-              )
+                child: Text("Create user"),
+              ),
+              ElevatedButton(onPressed: signIn, child: Text("Login")),
+              ElevatedButton(
+                onPressed: signOut,
+                child: Text("Sign out"),
+              ),
+              Text('User logged in = ${isSignedIn()}'),
+              Text(
+                  'User display name = ${FirebaseAuth.instance.currentUser?.displayName}'),
             ],
           ),
         ),
@@ -100,11 +108,40 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<void> createUser() async {}
+  Future<void> createUser() async {
+    print("Trying to create a user");
+    try {
+      final credential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } catch (e) {
+      print(e);
+    }
+    print("done");
+  }
 
-  Future<void> signIn() async {}
+  Future<void> signIn() async {
+    print("Signing in");
+    try {
+      final credential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
 
-  Future<void> signOut() async {}
+      await credential.user?.updateDisplayName("Username1");
+    } catch (e) {
+      print(e);
+    }
+    print("Success");
+    setState(() {});
+  }
 
-  // bool isSignedIn() {}
+  Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
+    setState(() {});
+  }
+
+  bool isSignedIn() {
+    return FirebaseAuth.instance.currentUser != null;
+  }
 }
